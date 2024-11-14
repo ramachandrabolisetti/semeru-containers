@@ -26,7 +26,7 @@ RUN dnf install -y \
 
 LABEL name="IBM Semeru Runtime Certified Edition" \
       vendor="International Business Machines Corporation" \
-      version="11.0.24.1" \
+      version="11.0.25.0" \
       release="11" \
       run="docker run --rm -ti <image_name:tag> /bin/bash" \
       summary="IBM Semeru Runtime Certified Edition Docker Image for OpenJDK with openj9 and ubi" \
@@ -80,26 +80,26 @@ RUN --mount=type=secret,id=criu_secrets source /run/secrets/criu_secrets; \
 
 ENV PATH="/usr/local/sbin:$PATH"
 
-ENV JAVA_VERSION 11.0.24.1
+ENV JAVA_VERSION 11.0.25.0
 
 RUN set -eux; \
     ARCH="$(uname -m)"; \
     case "${ARCH}" in \
        amd64|x86_64) \
-         ESUM='e46c6d146b1c6d72a48a5f2e387eca12d25211fcee60f856b743a37844c4715e'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.24%2B8_openj9-0.46.1/ibm-semeru-certified-jre_x64_linux_11.0.24.1.tar.gz'; \
+         ESUM='4a92b3f7a9e5d117f16f3f00a97ce774c728b031a7dda569f9b95a878fcd8ac5'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.25%2B9_openj9-0.48.0/ibm-semeru-certified-jre_x64_linux_11.0.25.0.tar.gz'; \
          ;; \
        ppc64el|ppc64le) \
-         ESUM='a978dac55bd603e60f6ae4cfc7ea78aaf59a0338e831b14291008ad2fcd1706c'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.24%2B8_openj9-0.46.1/ibm-semeru-certified-jre_ppc64le_linux_11.0.24.1.tar.gz'; \
+         ESUM='3c094ea73b358e5af816f65710ab7dfbd07d6f3a4d6e3532cb268d78b2294c0f'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.25%2B9_openj9-0.48.0/ibm-semeru-certified-jre_ppc64le_linux_11.0.25.0.tar.gz'; \
          ;; \
        s390x) \
-         ESUM='30396d4a234ccdf3f7e551f52be08db986efa349ec170f58ff93f5f493191243'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.24%2B8_openj9-0.46.1/ibm-semeru-certified-jre_s390x_linux_11.0.24.1.tar.gz'; \
+         ESUM='06b4f3571b83a02dd3bb63445c9f6dfbac3bab79843f8f4174cc3059767e2535'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.25%2B9_openj9-0.48.0/ibm-semeru-certified-jre_s390x_linux_11.0.25.0.tar.gz'; \
          ;; \
        aarch64|arm64) \
-         ESUM='d0dda495e83d78daa3f83916bf7103a88296468bb2c466dbfe8d8258f1516a1c'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.24%2B8_openj9-0.46.1/ibm-semeru-certified-jre_aarch64_linux_11.0.24.1.tar.gz'; \
+         ESUM='daba1549d6f5740c3de9af0d6aec0d8db8f7a2d9f941bbb39487e82c5064ddfd'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.25%2B9_openj9-0.48.0/ibm-semeru-certified-jre_aarch64_linux_11.0.25.0.tar.gz'; \
          ;; \
        *) \
          echo "Unsupported arch: ${ARCH}"; \
@@ -132,8 +132,8 @@ RUN set -eux; \
     SCC_SIZE="50m"; \
     DOWNLOAD_PATH_TOMCAT=/tmp/tomcat; \
     INSTALL_PATH_TOMCAT=/opt/tomcat-home; \
-    TOMCAT_CHECKSUM="ef3ac81debbc3a519c43d1fdb1c88ab26a8052af424d81bceccfbd6e663050a06d7aad7960fd5d11c17849829daebbebf33d92ac1158902283d0e534514aab93"; \
-    TOMCAT_DWNLD_URL="https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.96/bin/apache-tomcat-9.0.96.tar.gz"; \
+    TOMCAT_CHECKSUM="537dbbfc03b37312c2ec282c6906828298cb74e42aca6e3e6835d44bf6923fd8c5db77e98bf6ce9ef19e1922729de53b20546149176e07ac04087df786a62fd9"; \
+    TOMCAT_DWNLD_URL="https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.97/bin/apache-tomcat-9.0.97.tar.gz"; \
     \
     mkdir -p "${DOWNLOAD_PATH_TOMCAT}" "${INSTALL_PATH_TOMCAT}"; \
     curl -LfsSo "${DOWNLOAD_PATH_TOMCAT}"/tomcat.tar.gz "${TOMCAT_DWNLD_URL}"; \
