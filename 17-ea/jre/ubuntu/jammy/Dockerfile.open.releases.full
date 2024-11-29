@@ -1,4 +1,4 @@
-# (C) Copyright IBM Corporation 2024, 2024
+# (C) Copyright IBM Corporation 2021, 2024
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,33 +13,28 @@
 # limitations under the License.
 #
 
-FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
+FROM ubuntu:22.04
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
-RUN microdnf install -y tzdata openssl ca-certificates fontconfig glibc-langpack-en gzip tar \
-    && microdnf update -y; microdnf clean all
-
-LABEL name="IBM Semeru Runtime EA" \
-      vendor="International Business Machines Corporation" \
-      version="jdk-17.0.14+3_nov_24-preview_1" \
-      release="17" \
-      run="docker run --rm -ti <image_name:tag> /bin/bash" \
-      summary="IBM Semeru Runtime EA Docker Image for OpenJDK with openj9 and ubi-minimal" \
-      description="For more information on this image please see https://github.com/ibmruntimes/semeru-containers/blob/master/README.md"
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata curl ca-certificates fontconfig locales \
+    && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+    && locale-gen en_US.UTF-8 \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV JAVA_VERSION jdk-17.0.14+3_nov_24-preview_1
 
 RUN set -eux; \
-    ARCH="$(uname -m)"; \
+    ARCH="$(dpkg --print-architecture)"; \
     case "${ARCH}" in \
        aarch64|arm64) \
-         ESUM='2dc07bc8cdf2ea770bff412e8ec7f3ab00534cd7a5eb7187d59dc4414903ec31'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jdk_aarch64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
+         ESUM='4d57b62777f6ef4b0ead5a3e51bb17de55f2f684f5b6c441b0a4086314d305fb'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jre_aarch64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
          ;; \
        amd64|x86_64) \
-         ESUM='df2c197bc6f09cc9ffadf0c4e2290f96cf12e70c5f18c64ed050bf8ebb9fcf19'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jdk_x64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
+         ESUM='f67de78032a670796848c32cab7a78e7b7c7d4313e22905078c20aaa607e6d60'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jre_x64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
          ;; \
        *) \
          echo "Unsupported arch: ${ARCH}"; \
@@ -48,15 +43,13 @@ RUN set -eux; \
     esac; \
     curl -LfsSo /tmp/openjdk.tar.gz ${BINARY_URL}; \
     echo "${ESUM} */tmp/openjdk.tar.gz" | sha256sum -c -; \
-    mkdir -p /opt/java/java-ea; \
-    cd /opt/java/java-ea; \
+    mkdir -p /opt/java/openjdk; \
+    cd /opt/java/openjdk; \
     tar -xf /tmp/openjdk.tar.gz --strip-components=1; \
-    mkdir -p /licenses; \
-    cp /opt/java/java-ea/legal/java.base/LICENSE /licenses; \
     rm -rf /tmp/openjdk.tar.gz;
 
-ENV JAVA_HOME=/opt/java/java-ea \
-    PATH="/opt/java/java-ea/bin:$PATH"
+ENV JAVA_HOME=/opt/java/openjdk \
+    PATH="/opt/java/openjdk/bin:$PATH"
 ENV JAVA_TOOL_OPTIONS="-XX:+IgnoreUnrecognizedVMOptions -XX:+PortableSharedCache -XX:+IdleTuningGcOnIdle -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,readonly,nonFatal"
 
 # Create OpenJ9 SharedClassCache (SCC) for bootclasses to improve the java startup.
@@ -108,4 +101,3 @@ RUN set -eux; \
     \
     echo "SCC generation phase completed";
 
-USER 1001
