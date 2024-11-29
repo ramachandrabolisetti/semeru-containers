@@ -51,8 +51,6 @@ RUN set -eux; \
     mkdir -p /opt/java/java-ea; \
     cd /opt/java/java-ea; \
     tar -xf /tmp/openjdk.tar.gz --strip-components=1; \
-    mkdir -p /licenses; \
-    cp /opt/java/java-ea/legal/java.base/LICENSE /licenses; \
     rm -rf /tmp/openjdk.tar.gz;
 
 ENV JAVA_HOME=/opt/java/java-ea \
