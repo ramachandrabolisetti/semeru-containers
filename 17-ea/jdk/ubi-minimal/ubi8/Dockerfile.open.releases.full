@@ -13,11 +13,11 @@
 # limitations under the License.
 #
 
-FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
-RUN microdnf install -y tzdata openssl ca-certificates fontconfig glibc-langpack-en gzip tar \
+RUN microdnf install -y tzdata openssl curl ca-certificates fontconfig glibc-langpack-en gzip tar \
     && microdnf update -y; microdnf clean all
 
 LABEL name="IBM Semeru Runtime EA" \
@@ -34,12 +34,12 @@ RUN set -eux; \
     ARCH="$(uname -m)"; \
     case "${ARCH}" in \
        aarch64|arm64) \
-         ESUM='4d57b62777f6ef4b0ead5a3e51bb17de55f2f684f5b6c441b0a4086314d305fb'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jre_aarch64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
+         ESUM='2dc07bc8cdf2ea770bff412e8ec7f3ab00534cd7a5eb7187d59dc4414903ec31'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jdk_aarch64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
          ;; \
        amd64|x86_64) \
-         ESUM='f67de78032a670796848c32cab7a78e7b7c7d4313e22905078c20aaa607e6d60'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jre_x64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
+         ESUM='df2c197bc6f09cc9ffadf0c4e2290f96cf12e70c5f18c64ed050bf8ebb9fcf19'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jdk_x64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
          ;; \
        *) \
          echo "Unsupported arch: ${ARCH}"; \

@@ -13,33 +13,28 @@
 # limitations under the License.
 #
 
-FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
+FROM ubuntu:22.04
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
-RUN microdnf install -y tzdata openssl ca-certificates fontconfig glibc-langpack-en gzip tar \
-    && microdnf update -y; microdnf clean all
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata curl ca-certificates fontconfig locales \
+    && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+    && locale-gen en_US.UTF-8 \
+    && rm -rf /var/lib/apt/lists/*
 
-LABEL name="IBM Semeru Runtime EA" \
-      vendor="International Business Machines Corporation" \
-      version="jdk-17.0.14+3_nov_24-preview_1" \
-      release="17" \
-      run="docker run --rm -ti <image_name:tag> /bin/bash" \
-      summary="IBM Semeru Runtime EA Docker Image for OpenJDK with openj9 and ubi-minimal" \
-      description="For more information on this image please see https://github.com/ibmruntimes/semeru-containers/blob/master/README.md"
-
-ENV JAVA_VERSION jdk-17.0.14+3_nov_24-preview_1
+ENV JAVA_VERSION jdk-11.0.26+2_nov_24-preview_1
 
 RUN set -eux; \
-    ARCH="$(uname -m)"; \
+    ARCH="$(dpkg --print-architecture)"; \
     case "${ARCH}" in \
        aarch64|arm64) \
-         ESUM='4d57b62777f6ef4b0ead5a3e51bb17de55f2f684f5b6c441b0a4086314d305fb'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jre_aarch64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
+         ESUM='e1d84a953f104ca498772a713884482e36b8bf2da86c414b970edbd85fd06e01'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-ea-binaries/releases/download/jdk-11.0.26%2B2_nov_24-preview_1/ibm-semeru-open-jdk_aarch64_linux_11.0.26_2_november_24_preview_1.tar.gz'; \
          ;; \
        amd64|x86_64) \
-         ESUM='f67de78032a670796848c32cab7a78e7b7c7d4313e22905078c20aaa607e6d60'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jre_x64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
+         ESUM='bf4c04435e7a47cacd2ee59cc075763c94f6c6dfc0a670ff0965174c10451aa4'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-ea-binaries/releases/download/jdk-11.0.26%2B2_nov_24-preview_1/ibm-semeru-open-jdk_x64_linux_11.0.26_2_november_24_preview_1.tar.gz'; \
          ;; \
        *) \
          echo "Unsupported arch: ${ARCH}"; \
@@ -106,4 +101,4 @@ RUN set -eux; \
     \
     echo "SCC generation phase completed";
 
-USER 1001
+CMD ["jshell"]
