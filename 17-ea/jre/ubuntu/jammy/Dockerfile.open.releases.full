@@ -23,18 +23,18 @@ RUN apt-get update \
     && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 
-ENV JAVA_VERSION jdk-17.0.14+3_nov_24-preview_1
+ENV JAVA_VERSION jdk-17.0.14+6_nov_24-preview_2
 
 RUN set -eux; \
     ARCH="$(dpkg --print-architecture)"; \
     case "${ARCH}" in \
        aarch64|arm64) \
-         ESUM='4d57b62777f6ef4b0ead5a3e51bb17de55f2f684f5b6c441b0a4086314d305fb'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jre_aarch64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
+         ESUM='bf6fb1749dff36551dc24c53ffa73187d43100c6577ea11726689bb639eee1c1'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B6_nov_24-preview_2/ibm-semeru-open-jre_aarch64_linux_17.0.14_6__november_24_preview_2.tar.gz'; \
          ;; \
        amd64|x86_64) \
-         ESUM='f67de78032a670796848c32cab7a78e7b7c7d4313e22905078c20aaa607e6d60'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jre_x64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
+         ESUM='25bdaffc771b46c132b8b37abed364d5bfa51f96d53f1bcf775c37e262ae96a4'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B6_nov_24-preview_2/ibm-semeru-open-jre_x64_linux_17.0.14_6__november_24_preview_2.tar.gz'; \
          ;; \
        *) \
          echo "Unsupported arch: ${ARCH}"; \

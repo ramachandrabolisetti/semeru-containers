@@ -23,18 +23,18 @@ RUN apt-get update \
     && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/*
 
-ENV JAVA_VERSION jdk-11.0.26+2_nov_24-preview_1
+ENV JAVA_VERSION jdk-11.0.26+3_nov_24-preview_2
 
 RUN set -eux; \
     ARCH="$(dpkg --print-architecture)"; \
     case "${ARCH}" in \
        aarch64|arm64) \
-         ESUM='e1d84a953f104ca498772a713884482e36b8bf2da86c414b970edbd85fd06e01'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru11-ea-binaries/releases/download/jdk-11.0.26%2B2_nov_24-preview_1/ibm-semeru-open-jdk_aarch64_linux_11.0.26_2_november_24_preview_1.tar.gz'; \
+         ESUM='ada1bef8979a9f0210c6391415a76511525c3e380bcd1fc1a5cd20aa56c4015f'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-ea-binaries/releases/download/jdk-11.0.26%2B3_nov_24-preview_2/ibm-semeru-open-jdk_aarch64_linux_11.0.26_3_november_24_preview_2.tar.gz'; \
          ;; \
        amd64|x86_64) \
-         ESUM='bf4c04435e7a47cacd2ee59cc075763c94f6c6dfc0a670ff0965174c10451aa4'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru11-ea-binaries/releases/download/jdk-11.0.26%2B2_nov_24-preview_1/ibm-semeru-open-jdk_x64_linux_11.0.26_2_november_24_preview_1.tar.gz'; \
+         ESUM='123a7fb7dd4840b5cce825419011f9624e3a0e788c393c000dd2512926988aa0'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-ea-binaries/releases/download/jdk-11.0.26%2B3_nov_24-preview_2/ibm-semeru-open-jdk_x64_linux_11.0.26_3_november_24_preview_2.tar.gz'; \
          ;; \
        *) \
          echo "Unsupported arch: ${ARCH}"; \
@@ -43,13 +43,13 @@ RUN set -eux; \
     esac; \
     curl -LfsSo /tmp/openjdk.tar.gz ${BINARY_URL}; \
     echo "${ESUM} */tmp/openjdk.tar.gz" | sha256sum -c -; \
-    mkdir -p /opt/java/java-ea; \
-    cd /opt/java/java-ea; \
+    mkdir -p /opt/java/openjdk; \
+    cd /opt/java/openjdk; \
     tar -xf /tmp/openjdk.tar.gz --strip-components=1; \
     rm -rf /tmp/openjdk.tar.gz;
 
-ENV JAVA_HOME=/opt/java/java-ea \
-    PATH="/opt/java/java-ea/bin:$PATH"
+ENV JAVA_HOME=/opt/java/openjdk \
+    PATH="/opt/java/openjdk/bin:$PATH"
 ENV JAVA_TOOL_OPTIONS="-XX:+IgnoreUnrecognizedVMOptions -XX:+PortableSharedCache -XX:+IdleTuningGcOnIdle -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,readonly,nonFatal"
 
 # Create OpenJ9 SharedClassCache (SCC) for bootclasses to improve the java startup.

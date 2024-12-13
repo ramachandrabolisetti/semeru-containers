@@ -26,7 +26,7 @@ RUN dnf install -y \
 
 LABEL name="IBM Semeru Runtime EA" \
       vendor="International Business Machines Corporation" \
-      version="jdk-17.0.14+3_nov_24-preview_1" \
+      version="jdk-17.0.14+6_nov_24-preview_2" \
       release="17" \
       run="docker run --rm -ti <image_name:tag> /bin/bash" \
       summary="IBM Semeru Runtime EA Docker Image for OpenJDK with openj9 and ubi" \
@@ -79,18 +79,18 @@ RUN --mount=type=secret,id=criu_secrets source /run/secrets/criu_secrets; \
 
 ENV PATH="/usr/local/sbin:$PATH"
 
-ENV JAVA_VERSION jdk-17.0.14+3_nov_24-preview_1
+ENV JAVA_VERSION jdk-17.0.14+6_nov_24-preview_2
 
 RUN set -eux; \
     ARCH="$(uname -m)"; \
     case "${ARCH}" in \
        aarch64|arm64) \
-         ESUM='4d57b62777f6ef4b0ead5a3e51bb17de55f2f684f5b6c441b0a4086314d305fb'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jre_aarch64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
+         ESUM='bf6fb1749dff36551dc24c53ffa73187d43100c6577ea11726689bb639eee1c1'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B6_nov_24-preview_2/ibm-semeru-open-jre_aarch64_linux_17.0.14_6__november_24_preview_2.tar.gz'; \
          ;; \
        amd64|x86_64) \
-         ESUM='f67de78032a670796848c32cab7a78e7b7c7d4313e22905078c20aaa607e6d60'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B3_nov_24-preview_1/ibm-semeru-open-jre_x64_linux_17.0.14_3__november_24_preview_1.tar.gz'; \
+         ESUM='25bdaffc771b46c132b8b37abed364d5bfa51f96d53f1bcf775c37e262ae96a4'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru17-ea-binaries/releases/download/jdk-17.0.14%2B6_nov_24-preview_2/ibm-semeru-open-jre_x64_linux_17.0.14_6__november_24_preview_2.tar.gz'; \
          ;; \
        *) \
          echo "Unsupported arch: ${ARCH}"; \
@@ -99,13 +99,15 @@ RUN set -eux; \
     esac; \
     curl -LfsSo /tmp/openjdk.tar.gz ${BINARY_URL}; \
     echo "${ESUM} */tmp/openjdk.tar.gz" | sha256sum -c -; \
-    mkdir -p /opt/java/java-ea; \
-    cd /opt/java/java-ea; \
+    mkdir -p /opt/java/openjdk; \
+    cd /opt/java/openjdk; \
     tar -xf /tmp/openjdk.tar.gz --strip-components=1; \
+    mkdir -p /licenses; \
+    cp /opt/java/openjdk/legal/java.base/LICENSE /licenses; \
     rm -rf /tmp/openjdk.tar.gz;
 
-ENV JAVA_HOME=/opt/java/java-ea \
-    PATH="/opt/java/java-ea/bin:$PATH"
+ENV JAVA_HOME=/opt/java/openjdk \
+    PATH="/opt/java/openjdk/bin:$PATH"
 ENV JAVA_TOOL_OPTIONS="-XX:+IgnoreUnrecognizedVMOptions -XX:+PortableSharedCache -XX:+IdleTuningGcOnIdle -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,readonly,nonFatal"
 
 # Create OpenJ9 SharedClassCache (SCC) for bootclasses to improve the java startup.
