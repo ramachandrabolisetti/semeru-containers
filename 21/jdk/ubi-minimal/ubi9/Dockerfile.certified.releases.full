@@ -29,6 +29,7 @@ LABEL name="IBM Semeru Runtime Certified Edition" \
       vendor="International Business Machines Corporation" \
       version="21.0.5.0" \
       release="21" \
+      maintainer="jayasg12@in.ibm.com" \
       run="docker run --rm -ti <image_name:tag> /bin/bash" \
       summary="IBM Semeru Runtime Certified Docker Image for OpenJDK with openj9 and ubi-minimal" \
       description="For more information on this image please see https://github.com/ibmruntimes/semeru-containers/blob/master/README.md"
