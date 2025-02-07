@@ -117,6 +117,8 @@ RUN set -eux; \
     \
     echo "SCC generation phase completed";
 
-CMD ["jshell"]
+# Remove log files
+RUN rm -rf /var/log/*
 
+CMD ["jshell"]
 USER 1001

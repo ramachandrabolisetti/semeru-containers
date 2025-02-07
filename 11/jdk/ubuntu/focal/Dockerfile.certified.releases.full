@@ -111,4 +111,7 @@ RUN set -eux; \
     \
     echo "SCC generation phase completed";
 
+# Remove log files
+RUN rm -rf /var/log/*
+
 CMD ["jshell"]

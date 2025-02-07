@@ -63,3 +63,6 @@ RUN echo Verifying install ... \
     && echo   javac -version && javac -version \
     && echo   java -version && java -version \
     && echo Complete.
+
+# Remove log files
+RUN rm -rf /var/log/*

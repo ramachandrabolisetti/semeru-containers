@@ -104,3 +104,6 @@ RUN set -eux; \
     fi; \
     \
     echo "SCC generation phase completed";
+
+# Remove log files
+RUN rm -rf /var/log/*
