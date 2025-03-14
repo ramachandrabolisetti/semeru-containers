@@ -22,13 +22,13 @@ RUN dnf install -y \
         iptables-libs iptables jansson libibverbs libmnl libnet libnftnl libpcap nftables protobuf-c \
     # Semeru dependencies
         tzdata openssl ca-certificates fontconfig glibc-langpack-en gzip tar \
-    && dnf update -y && dnf clean all;
+    && dnf update -y && dnf clean all && rm -rf /var/log/*;
 
 RUN yum install -y tzdata openssl wget openssl ca-certificates fontconfig glibc-langpack-en gzip tar \
     && yum update; yum clean all
 
 #RUN dnf install -y tzdata openssl curl ca-certificates fontconfig glibc-langpack-en gzip tar \
-#    && dnf update -y; dnf clean all
+#    && dnf update -y; dnf clean all && rm -rf /var/log/*
 
 LABEL name="IBM Semeru Runtime Certified Edition" \
       vendor="International Business Machines Corporation" \
