@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest AS base-image
 
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
@@ -173,18 +173,21 @@ RUN set -eux; \
     \
     echo "SCC generation phase completed";
 
+FROM base-image AS instanton-ldconfig
+
 # For InstantOn, generate instanton.ld.so.cache which excludes glibc-hwcaps directories.
+# This is done in an intermediate stage to avoid modifying the base image.
 # ldconfig output example lines:
 #         libcap-ng.so.0 (libc6,64bit) => /lib64/libcap-ng.so.0
 #         libc_malloc_debug.so.0 (libc6,64bit, OS ABI: Linux 3.10.0) => /lib64/libc_malloc_debug.so.0
 #         libc.so.6 (libc6,64bit, hwcap: "power10", OS ABI: Linux 3.10.0) => /lib64/glibc-hwcaps/power10/libc.so.6
 # sed regexp filter should pass any line that looks as follows: ... => /.../glibc-hwcaps/...
 RUN glibc_hwcaps_dirs=$(ldconfig --print-cache | sed --regexp-extended --silent 's,^.+[[:space:]]+=>[[:space:]]+(/.+/glibc-hwcaps)/.+$,\1,p' | sort | uniq) \
-    && mv -v /etc/ld.so.cache /etc/ld.so.cache.orig \
-    && for d in $glibc_hwcaps_dirs; do mv -v $d $d-hidden; done \
-    && ldconfig \
-    && mv -v /etc/ld.so.cache /etc/instanton.ld.so.cache \
-    && for d in $glibc_hwcaps_dirs; do mv -v $d-hidden $d; done \
-    && mv -v /etc/ld.so.cache.orig /etc/ld.so.cache
+    && for d in $glibc_hwcaps_dirs; do rm -rf $d; done \
+    && ldconfig
+
+FROM base-image
+
+COPY --from=instanton-ldconfig /etc/ld.so.cache /etc/instanton.ld.so.cache
 
 USER 1001
