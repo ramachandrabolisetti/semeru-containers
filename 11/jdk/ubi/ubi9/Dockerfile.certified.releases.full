@@ -41,6 +41,7 @@ LABEL name="IBM Semeru Runtime Certified Edition" \
 
 # Install CRIU
 RUN --mount=type=secret,id=criu_secrets source /run/secrets/criu_secrets; \
+    set -eux; \
     ARCH="$(uname -m)"; \
     case "${ARCH}" in \
       amd64|x86_64|ppc64el|ppc64le|s390x|aarch64|arm64) \
