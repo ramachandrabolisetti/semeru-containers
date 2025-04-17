@@ -42,16 +42,16 @@ RUN --mount=type=secret,id=criu_secrets source /run/secrets/criu_secrets; \
           CRIU_SHA_URL='https://na.artifactory.swg-devops.com/artifactory/hyc-rt-java-delivery-generic-local/IBM/java/criu_build/45/x64_linux/criu.tar.gz.sha256.txt'; \
           ;; \
         ppc64el|ppc64le) \
-          CRIU_URL='https://na.artifactory.swg-devops.com/artifactory/hyc-rt-java-delivery-generic-local/IBM/java/criu_build/45/ppc64le_linux/criu.tar.gz'; \
-          CRIU_SHA_URL='https://na.artifactory.swg-devops.com/artifactory/hyc-rt-java-delivery-generic-local/IBM/java/criu_build/45/ppc64le_linux/criu.tar.gz.sha256.txt'; \
+          CRIU_URL='https://na.artifactory.swg-devops.com/artifactory/hyc-rt-java-delivery-generic-local/IBM/java/criu_build/45/ppc64le_linux/ubi8/criu.tar.gz'; \
+          CRIU_SHA_URL='https://na.artifactory.swg-devops.com/artifactory/hyc-rt-java-delivery-generic-local/IBM/java/criu_build/45/ppc64le_linux/ubi8/criu.tar.gz.sha256.txt'; \
           ;; \
         s390x) \
           CRIU_URL='https://na.artifactory.swg-devops.com/artifactory/hyc-rt-java-delivery-generic-local/IBM/java/criu_build/45/s390x_linux/criu.tar.gz'; \
           CRIU_SHA_URL='https://na.artifactory.swg-devops.com/artifactory/hyc-rt-java-delivery-generic-local/IBM/java/criu_build/45/s390x_linux/criu.tar.gz.sha256.txt'; \
           ;; \
         aarch64) \
-          CRIU_URL='https://na.artifactory.swg-devops.com/artifactory/hyc-rt-java-delivery-generic-local/IBM/java/criu_build/45/aarch64_linux/criu.tar.gz'; \
-          CRIU_SHA_URL='https://na.artifactory.swg-devops.com/artifactory/hyc-rt-java-delivery-generic-local/IBM/java/criu_build/45/aarch64_linux/criu.tar.gz.sha256.txt'; \
+          CRIU_URL='https://na.artifactory.swg-devops.com/artifactory/hyc-rt-java-delivery-generic-local/IBM/java/criu_build/45/aarch64_linux/ubi8/criu.tar.gz'; \
+          CRIU_SHA_URL='https://na.artifactory.swg-devops.com/artifactory/hyc-rt-java-delivery-generic-local/IBM/java/criu_build/45/aarch64_linux/ubi8/criu.tar.gz.sha256.txt'; \
           ;; \
         *) \
           echo "Unsupported arch: ${ARCH}"; \
