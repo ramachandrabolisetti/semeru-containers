@@ -81,26 +81,26 @@ RUN --mount=type=secret,id=criu_secrets source /run/secrets/criu_secrets; \
 
 ENV PATH="/usr/local/sbin:$PATH"
 
-ENV JAVA_VERSION 11.0.26.0
+ENV JAVA_VERSION 11.0.27.0
 
 RUN set -eux; \
     ARCH="$(uname -m)"; \
     case "${ARCH}" in \
        amd64|x86_64) \
-         ESUM='8331b21b958370ab166809f119d05647df7cac962efa5963a776fdf423a4b2d2'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.26%2B4_openj9-0.49.0/ibm-semeru-certified-jdk_x64_linux_11.0.26.0.tar.gz'; \
+         ESUM='feef1adabd6624ea320b40e348b4e763f311cdc126a6af9d09e91c464bf317c3'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.27%2B6_openj9-0.51.0/ibm-semeru-certified-jdk_x64_linux_11.0.27.0.tar.gz'; \
          ;; \
        ppc64el|ppc64le) \
-         ESUM='cd13fc25a546b6e09a730454759353853f9a71327882249c10c5701e0bbb7bd9'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.26%2B4_openj9-0.49.0/ibm-semeru-certified-jdk_ppc64le_linux_11.0.26.0.tar.gz'; \
+         ESUM='ce79aabc37c461f189765106e9a4a1f7defb4b89694514aaee6e8f6dbf604177'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.27%2B6_openj9-0.51.0/ibm-semeru-certified-jdk_ppc64le_linux_11.0.27.0.tar.gz'; \
          ;; \
        s390x) \
-         ESUM='8eeb7ca77a8346e686eb779dd3e0d8bb2ba0011f1b050c7db27434da350bc302'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.26%2B4_openj9-0.49.0/ibm-semeru-certified-jdk_s390x_linux_11.0.26.0.tar.gz'; \
+         ESUM='ce1a18f62a4e08e0f4149514df08bb133acd220c542d3dfc99bf2d4bc8a5f47a'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.27%2B6_openj9-0.51.0/ibm-semeru-certified-jdk_s390x_linux_11.0.27.0.tar.gz'; \
          ;; \
        aarch64|arm64) \
-         ESUM='4759b6e783433750bba96407660005d86f0d056d566d29c6a26d6c52f6aa0b8e'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.26%2B4_openj9-0.49.0/ibm-semeru-certified-jdk_aarch64_linux_11.0.26.0.tar.gz'; \
+         ESUM='c1819feee7de0450af8da1be6ec6ad79c5f096fc01739fd64e4d881973b347da'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru11-certified-binaries/releases/download/jdk-11.0.27%2B6_openj9-0.51.0/ibm-semeru-certified-jdk_aarch64_linux_11.0.27.0.tar.gz'; \
          ;; \
        *) \
          echo "Unsupported arch: ${ARCH}"; \
