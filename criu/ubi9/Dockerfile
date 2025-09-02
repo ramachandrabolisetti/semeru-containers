@@ -63,7 +63,8 @@ RUN yum -y update && yum install -y \
     libpcap \
     nftables \
     protobuf-c \
-    xmlto
+    xmlto \
+    libuuid-devel
 
 RUN cd /tmp; \
     git clone -b ${CRIU_BRANCH} ${CRIU_REPO}; \

@@ -48,6 +48,8 @@ RUN yum -y update && yum install -y \
     protobuf-c-devel \
     python3 \
     python3-protobuf \
+    python3-pip \
+    python3-future \
     libnet-devel \
     nftables-devel \
     protobuf-devel \
@@ -61,7 +63,8 @@ RUN yum -y update && yum install -y \
     libpcap \
     nftables \
     protobuf-c \
-    xmlto
+    xmlto \
+    libuuid-devel
 
 RUN cd /tmp; \
     git clone -b ${CRIU_BRANCH} ${CRIU_REPO}; \
