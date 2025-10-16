@@ -1,4 +1,4 @@
-# (C) Copyright IBM Corporation 2023, 2023
+# (C) Copyright IBM Corporation 2025
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,55 +17,60 @@
 # docker build --build-arg CRIU_REPO=<repo> --build-arg CRIU_BRANCH=<branch> --build-arg CRIU_SHA=<sha> -f Dockerfile .
 #######################################################################################################################
 
-FROM registry.access.redhat.com/ubi9/ubi:latest
+FROM public.ecr.aws/ubuntu/ubuntu:22.04
 
 ARG CRIU_REPO=https://github.com/ibmruntimes/criu.git
-ARG CRIU_BRANCH=criu-dev
+ARG CRIU_BRANCH=upstream-master
 # Last stable commit SHA
 ARG CRIU_SHA
 
-RUN dnf install -y yum-utils https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
-    && yum-config-manager --enable codeready-builder-for-rhel-9-$(uname -p)-rpms*
+# tzdata package details
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
 
-# CRIU package dependencies
-RUN yum -y update && yum install -y \
-    glibc-locale-source \
-    kernel-devel \
-    make \
-    automake \
-    gcc \
-    gcc-c++ \
-    glibc \
-    vim \
-    git \
+RUN apt-get update && \ 
+    apt-get dist-upgrade -y && \
+    apt-get install -y \
+    apt-utils \
     asciidoc \
-    gnutls-devel \
-    libcap-devel \
-    libnl3-devel \
-    libuuid-devel \
+    automake \
+    g++ \
+    gcc \
+    git \
+    iptables \
+    libaio-dev \
+    libbsd-dev \
+    libcap2 \
+    libcap-dev \
+    libgnutls28-dev \
+    libgnutls30 \
+    libibverbs1 \
+    libjansson4 \
+    libmnl0 \
+    libnet1 \
+    libnet1-dev \
+    libnftables1 \
+    libnftables-dev \
+    libnftnl11 \
+    libnl-3-dev \
+    libpcap0.8 \
+    libprotobuf-c1 \
+    libprotobuf-c-dev \
+    libprotobuf-dev \
+    libuuid1 \
+    make \
     nftables \
-    pkgconfig \
-    protobuf-c \
-    protobuf-c-devel \
+    pkg-config \
+    protobuf-c-compiler \
+    protobuf-compiler \
     python3 \
-    python3-protobuf \
-    python3-pip \
     python3-future \
-    libnet-devel \
-    nftables-devel \
-    protobuf-devel \
-    iptables-libs \
-    jansson \
-    libibverbs \
-    libcap \
-    libmnl \
-    libnet \
-    libnftnl \
-    libpcap \
-    nftables \
-    protobuf-c \
-    xmlto \
-    libuuid-devel
+    python3-pip \
+    python3-protobuf \
+    python3-yaml \
+    uuid-dev \
+    vim \
+    xmlto
 
 RUN cd /tmp; \
     git clone -b ${CRIU_BRANCH} ${CRIU_REPO}; \
@@ -78,4 +83,4 @@ RUN cd /tmp; \
     cd ../; \
     tar -czf criu.tar.gz criu; \
     sha256sum criu.tar.gz > criu.tar.gz.sha256.txt; \
-    rm -fr criu-build;
+    rm -rf criu-build;

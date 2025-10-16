@@ -42,6 +42,7 @@ RUN yum -y update && yum install -y \
     gnutls-devel \
     libcap-devel \
     libnl3-devel \
+    libuuid-devel \
     nftables \
     pkgconfig \
     protobuf-c \
