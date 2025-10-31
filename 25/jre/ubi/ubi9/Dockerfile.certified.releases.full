@@ -26,7 +26,7 @@ RUN dnf install -y \
 
 LABEL name="IBM Semeru Runtime Certified Edition" \
       vendor="International Business Machines Corporation" \
-      version="25.0.0.0" \
+      version="25.0.1.0" \
       release="25" \
       maintainer="jayasg12@in.ibm.com" \
       run="docker run --rm -ti <image_name:tag> /bin/bash" \
@@ -75,26 +75,26 @@ RUN --mount=type=secret,id=criu_secrets source /run/secrets/criu_secrets; \
 
 ENV PATH="/usr/local/sbin:$PATH"
 
-ENV JAVA_VERSION 25.0.0.0
+ENV JAVA_VERSION 25.0.1.0
 
 RUN set -eux; \
     ARCH="$(uname -m)"; \
     case "${ARCH}" in \
        aarch64|arm64) \
-         ESUM='0713c49444003a38b5733a5d452f5c3760d5347c3bdc31c876c07311bc97ec31'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru25-certified-binaries/releases/download/jdk-25%2B36_openj9-0.55.0/ibm-semeru-certified-jre_aarch64_linux_25.0.0.0.tar.gz'; \
+         ESUM='8e0e83e15e3d44f728b0e38b45b8899185efae2229f5f72e2a4974a1f618ece9'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru25-certified-binaries/releases/download/jdk-25.0.1%2B8_openj9-0.56.0/ibm-semeru-certified-jre_aarch64_linux_25.0.1.0.tar.gz'; \
          ;; \
        amd64|x86_64) \
-         ESUM='a9070d09f24497c184f03bb045a761e49297fa750c5ea8653207f2a7bbd40036'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru25-certified-binaries/releases/download/jdk-25%2B36_openj9-0.55.0/ibm-semeru-certified-jre_x64_linux_25.0.0.0.tar.gz'; \
+         ESUM='a87d16aff1d543dd72afb551cf90ef87fc02bf48a025182d3e5b902728a48898'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru25-certified-binaries/releases/download/jdk-25.0.1%2B8_openj9-0.56.0/ibm-semeru-certified-jre_x64_linux_25.0.1.0.tar.gz'; \
          ;; \
        ppc64el|ppc64le) \
-         ESUM='c11e9339d1f3315e1d5f870ff922ace865bf6a34b3e141969769b25c0ea084bd'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru25-certified-binaries/releases/download/jdk-25%2B36_openj9-0.55.0/ibm-semeru-certified-jre_ppc64le_linux_25.0.0.0.tar.gz'; \
+         ESUM='dd2481d99a806ce495a603bc24b39b4ed098285a2ec0189c5ecbae52eb45d383'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru25-certified-binaries/releases/download/jdk-25.0.1%2B8_openj9-0.56.0/ibm-semeru-certified-jre_ppc64le_linux_25.0.1.0.tar.gz'; \
          ;; \
        s390x) \
-         ESUM='abf5e3a7d0b82a6eb881ed4e49288b2e7e8ca267ac5d38ab7d16ac15e74a1296'; \
-         BINARY_URL='https://github.com/ibmruntimes/semeru25-certified-binaries/releases/download/jdk-25%2B36_openj9-0.55.0/ibm-semeru-certified-jre_s390x_linux_25.0.0.0.tar.gz'; \
+         ESUM='1a95d52c1b992d33bdb2c78613e788c3647a1fd092eb030ffc3c70a9b42b3024'; \
+         BINARY_URL='https://github.com/ibmruntimes/semeru25-certified-binaries/releases/download/jdk-25.0.1%2B8_openj9-0.56.0/ibm-semeru-certified-jre_s390x_linux_25.0.1.0.tar.gz'; \
          ;; \
        *) \
          echo "Unsupported arch: ${ARCH}"; \
