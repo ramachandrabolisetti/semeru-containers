@@ -154,6 +154,7 @@ RUN set -eux; \
     sleep 15; \
     ss -lnt; \
     "${INSTALL_PATH_TOMCAT}"/bin/shutdown.sh -force; \
+    ss -lnt; \
     sleep 15; \
     FULL=$( (java -Xshareclasses:name=dry_run_scc,cacheDir=/opt/java/.scc,printallStats 2>&1 || true) | awk '/^Cache is [0-9.]*% .*full/ {print substr($3, 1, length($3)-1)}'); \
     DST_CACHE=$(java -Xshareclasses:name=dry_run_scc,cacheDir=/opt/java/.scc,destroy 2>&1 || true); \
@@ -172,6 +173,7 @@ RUN set -eux; \
     sleep 15; \
     ss -lnt; \
     "${INSTALL_PATH_TOMCAT}"/bin/shutdown.sh -force; \
+    ss -lnt; \
     sleep 5; \
     FULL=$( (java -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,printallStats 2>&1 || true) | awk '/^Cache is [0-9.]*% .*full/ {print substr($3, 1, length($3)-1)}'); \
     echo "SCC layer is $FULL% full."; \
