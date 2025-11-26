@@ -132,6 +132,7 @@ RUN set -eux; \
     SCC_SIZE="50m"; \
     DOWNLOAD_PATH_TOMCAT=/tmp/tomcat; \
     INSTALL_PATH_TOMCAT=/opt/tomcat-home; \
+    export CATALINA_PID=/opt/tomcat-home/tomcat.pid; \
     TOMCAT_CHECKSUM="2a955d97c6ed7d01fbf0392f3e2920129bcd541b259e894f441e411bac3bbe65576bcb3a314f06d624c9d70040828d26aa8a2c4f39d225d73f6a3db7523aa3ba"; \
     TOMCAT_VERSION="9.0.111"; \
     TOMCAT_FILENAME="apache-tomcat-${TOMCAT_VERSION}.tar.gz"; \
@@ -155,9 +156,9 @@ RUN set -eux; \
     java -Xshareclasses:name=dry_run_scc,cacheDir=/opt/java/.scc,bootClassesOnly,nonFatal,createLayer -Xscmx$SCC_SIZE -version; \
     export OPENJ9_JAVA_OPTIONS="-XX:+IProfileDuringStartupPhase -Xshareclasses:name=dry_run_scc,cacheDir=/opt/java/.scc,bootClassesOnly,nonFatal"; \
     "${INSTALL_PATH_TOMCAT}"/bin/startup.sh; \
-    sleep 5; \
+    sleep 20; \
     "${INSTALL_PATH_TOMCAT}"/bin/shutdown.sh -force; \
-    sleep 15; \
+    sleep 5; \
     FULL=$( (java -Xshareclasses:name=dry_run_scc,cacheDir=/opt/java/.scc,printallStats 2>&1 || true) | awk '/^Cache is [0-9.]*% .*full/ {print substr($3, 1, length($3)-1)}'); \
     DST_CACHE=$(java -Xshareclasses:name=dry_run_scc,cacheDir=/opt/java/.scc,destroy 2>&1 || true); \
     SCC_SIZE=$(echo $SCC_SIZE | sed 's/.$//'); \
@@ -169,12 +170,13 @@ RUN set -eux; \
     \
     export OPENJ9_JAVA_OPTIONS="-XX:+IProfileDuringStartupPhase -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,bootClassesOnly,nonFatal"; \
     "${INSTALL_PATH_TOMCAT}"/bin/startup.sh; \
-    sleep 5; \
+    sleep 20; \
     "${INSTALL_PATH_TOMCAT}"/bin/shutdown.sh -force; \
     sleep 5; \
     FULL=$( (java -Xshareclasses:name=openj9_system_scc,cacheDir=/opt/java/.scc,printallStats 2>&1 || true) | awk '/^Cache is [0-9.]*% .*full/ {print substr($3, 1, length($3)-1)}'); \
     echo "SCC layer is $FULL% full."; \
     rm -rf "${INSTALL_PATH_TOMCAT}"; \
+    unset CATALINA_PID; \
     if [ -d "/opt/java/.scc" ]; then \
           chmod -R 0777 /opt/java/.scc; \
     fi; \
