@@ -27,11 +27,12 @@ ARG CRIU_BRANCH=upstream-master
 ARG CRIU_SHA
 
 ARG FTP3_USER
-ARG FTP3_PASSWORD
 
 # ftp won't work unless existing packages are updated
-RUN zypper update -y && \ 
-    zypper ar -f ftp://${FTP3_USER}:${FTP3_PASSWORD}@ftp3install.linux.ibm.com/suse/scc/Backports/SLE-16.0_$(arch)/standard/ "SLES16.0 Standard"
+RUN --mount=type=secret,id=FTP3PASS \
+    FTP3_PASSWORD="$(cat /run/secrets/FTP3PASS)" \
+    && zypper update -y \
+    && zypper ar -f ftp://${FTP3_USER}:${FTP3_PASSWORD}@ftp3install.linux.ibm.com/suse/scc/Backports/SLE-16.0_$(arch)/standard/ "SLES16.0 Standard"
 
 RUN zypper --gpg-auto-import-keys refresh && \
     zypper install -y \
