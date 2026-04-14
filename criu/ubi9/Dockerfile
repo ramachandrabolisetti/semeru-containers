@@ -51,6 +51,8 @@ RUN yum -y update && yum install -y \
     python3-protobuf \
     python3-pip \
     python3-future \
+    python3-setuptools \
+    python3-wheel \
     libnet-devel \
     nftables-devel \
     protobuf-devel \
@@ -67,15 +69,16 @@ RUN yum -y update && yum install -y \
     xmlto \
     libuuid-devel
 
-RUN cd /tmp; \
-    git clone -b ${CRIU_BRANCH} ${CRIU_REPO}; \
-    mv criu criu-build; \
-    cd criu-build; \
+RUN set -e \
+    && cd /tmp \
+    && git clone -b ${CRIU_BRANCH} ${CRIU_REPO} \
+    && mv criu criu-build \
+    && cd criu-build && \
     if [ "x${CRIU_SHA}" != x ] ; then \
         git reset --hard ${CRIU_SHA}; \
     fi; \
-    make DESTDIR=/tmp/criu PREFIX=/usr/local LIBDIR=/usr/local/lib64 install-lib install-criu; \
-    cd ../; \
-    tar -czf criu.tar.gz criu; \
-    sha256sum criu.tar.gz > criu.tar.gz.sha256.txt; \
-    rm -fr criu-build;
+    make DESTDIR=/tmp/criu PREFIX=/usr/local LIBDIR=/usr/local/lib64 install-lib install-criu \
+    && cd ../ \
+    && tar -czf criu.tar.gz criu \
+    && sha256sum criu.tar.gz > criu.tar.gz.sha256.txt \
+    && rm -rf criu-build
