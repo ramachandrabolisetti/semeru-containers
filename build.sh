@@ -19,16 +19,18 @@
 #  Script to build a docker image                                                   #
 #                                                                                   #
 #                                                                                   #
-#  Usage : build.sh <Image name> <Dockerfile location>                              #
+#  Usage : build.sh <Image name> <Dockerfile location> <edition> <criu secrets file>#
 #                                                                                   #
 #####################################################################################
+set -o pipefail
 
 image=$1
 dloc=$2
-dockerFile="Dockerfile.open.releases.full"
-dfile=$dloc$dockerFile
+edition=$3
+dockerFile="Dockerfile.$edition.releases.full"
+dfile=$dloc/$dockerFile
 containerEngine=docker
-criu_secrets=$3
+criu_secrets=$4
 
 tag=`echo $image | cut -d ":" -f2`
 
@@ -45,21 +47,37 @@ then
          echo "No CRIU secrets file provided using \"\""
          criu_secrets=""
       else
-         echo "Usage : build.sh <Image name> <Dockerfile location> <criu_secrets_file>"
+         echo "Usage : build.sh <Image name> <Dockerfile location> <edition> <criu_secrets_file>"
          exit 1
       fi
    fi
 fi
 
 echo "******************************************************************************"
-echo "           Starting docker build for $image                                   "
+echo "           Starting build for $image                                          "
 echo "******************************************************************************"
 
 if [[ $VAR == *"17-ea"* ]]; then
   containerEngine=podman
 fi
 
-$containerEngine build --no-cache --pull -t $image -f $dfile $dloc --secret id=criu_secrets,src=$criu_secrets 2>&1 | tee build_$tag.log
+# Check if the Dockerfile is actually a shell script (for buildah-based builds)
+if [ -f "$dfile.sh" ]; then
+    dfile="$dfile.sh"
+    echo "Detected buildah script: $dfile"
+    echo "Executing buildah build..."
+    
+    # Export variables needed by the buildah script
+    export FINAL_IMAGE_NAME="$image"
+    export CRIU_SECRETS_FILE="$criu_secrets"
+    
+    # Execute the buildah script in a user namespace (via `buildah unshare`) so that we can mount
+    # the container filesystem to the host without needing to be root.
+    buildah unshare bash "$dfile" 2>&1 | tee build_$tag.log
+else
+    echo "Using container engine: $containerEngine"
+    $containerEngine build --no-cache --pull -t $image -f $dfile $dloc --secret id=criu_secrets,src=$criu_secrets 2>&1 | tee build_$tag.log
+fi
 
 if [ $? = 0 ]
 then
