@@ -74,6 +74,7 @@ RUN zypper --gpg-auto-import-keys refresh && \
     python313-protobuf \
     python313-PyYAML \
     python313-requests-futures \
+    python313-wheel \
     vim \
     xmlto
 
