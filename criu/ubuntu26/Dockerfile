@@ -67,6 +67,7 @@ RUN apt-get update && \
     python3-futurist \
     python3-pip \
     python3-protobuf \
+    python3-wheel \
     python3-yaml \
     uuid-dev \
     vim \
