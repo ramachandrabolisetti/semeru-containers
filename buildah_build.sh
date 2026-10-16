@@ -100,8 +100,17 @@ if command -v dnf &> /dev/null; then
     echo "Removing temp rpm macros" >&2 && rm -rf "$rpm_macros_file"
     [ -e "$rpm_macros_file.bak" ] && echo "Restoring backup rpm macros" >&2 && mv "$rpm_macros_file.bak" "$rpm_macros_file"
 
-    # Leftovers from dnf
-    rm -rf "$base_mount_point/var/cache/" "$base_mount_point/var/lib/rhsm/" "$base_mount_point/var/lib/rpm/" "$base_mount_point/var/log/"
+    # Leftovers from dnf - preserve RPM DB (/var/lib/rpm and /usr/lib/sysimage/rpm) for vulnerability scanners
+    rm -rf "$base_mount_point/var/cache/" "$base_mount_point/var/lib/rhsm/" "$base_mount_point/var/log/"
+
+    # Ensure compatibility symlink exists so scanners find the RPM DB in either location
+    if [ -d "$base_mount_point/usr/lib/sysimage/rpm" ] && [ ! -e "$base_mount_point/var/lib/rpm" ]; then
+        mkdir -p "$base_mount_point/var/lib"
+        ln -sf /usr/lib/sysimage/rpm "$base_mount_point/var/lib/rpm"
+    elif [ -d "$base_mount_point/var/lib/rpm" ] && [ ! -e "$base_mount_point/usr/lib/sysimage/rpm" ]; then
+        mkdir -p "$base_mount_point/usr/lib/sysimage"
+        ln -sf /var/lib/rpm "$base_mount_point/usr/lib/sysimage/rpm"
+    fi
 else
     echo "Error: 'dnf' command not found" >&2
     return 1
