@@ -23,8 +23,12 @@ set -euo pipefail
 
 # Semeru dependencies
 SEMERU_PACKAGES="tzdata openssl ca-certificates fontconfig coreutils-single glibc-minimal-langpack glibc-langpack-en gzip tar"   
-# CRIU dependencies
-CRIU_PACKAGES="jansson libibverbs libmnl libnet libnftnl libpcap nftables protobuf-c"
+# CRIU dependencies - CRIU is only installed for Java > 8
+if [ "$SEMERU_JAVA_VERSION" -eq 8 ]; then
+    CRIU_PACKAGES=""
+else
+    CRIU_PACKAGES="jansson libibverbs libmnl libnet libnftnl libpcap nftables protobuf-c"
+fi
 
 # Trap to handle cleanup on error
 trap 'cleanup $?' EXIT
